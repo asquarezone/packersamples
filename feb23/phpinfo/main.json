@@ -1,0 +1,30 @@
+{
+  "variables": {
+    "aws_access_key": "",
+    "aws_secret_key": ""
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "access_key": "{{user `aws_access_key`}}",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "region": "us-west-2",
+      "source_ami": "ami-0735c191cf914754d",
+      "instance_type": "t2.micro",
+      "ssh_username": "ubuntu",
+      "ami_name": "qtphpinfo"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "apt update",
+        "apt install apache2 stress -y",
+        "apt install php libapache2-mod-php php-mysql -y",
+        "echo '<?php phpinfo(); ?>' > /var/www/html/info.php",
+        "systemctl restart apache2"
+      ]
+    }
+  ]
+}
